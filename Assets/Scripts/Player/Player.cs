@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     private bool onRight, OnLeft;
     private bool jumped;
     [SerializeField] Button jumpButton;
+    bool isJumping = false;
 
     private void Awake()
     {
@@ -34,6 +35,23 @@ public class Player : MonoBehaviour
             {
                 anim.Play("RunLeft");
             }
+           
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!jumped)
+            {
+                if (onRight)
+                {
+                    anim.Play("RunRight");
+                }
+                else
+                {
+                    anim.Play("RunLeft");
+                }
+
+            }
         }
     }
 
@@ -42,11 +60,30 @@ public class Player : MonoBehaviour
         if(onRight)
         {
             anim.Play("JumpLeft");
+            OnLeft = true;
+            onRight = false;
+            
         }
         else
         {
             anim.Play("JumpRight");
+            
         }
         jumped = true;
+        
+    }
+
+    void OnRightSide()
+    {
+        onRight = true;
+        OnLeft = false;
+        jumped = false;
+    }
+
+    void OnLeftSide()
+    {
+        onRight = false;
+        OnLeft = true;
+        jumped = false;
     }
 }
