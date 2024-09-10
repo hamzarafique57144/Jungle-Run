@@ -9,6 +9,9 @@ public class BgMover : MonoBehaviour
     private GameObject[] sideBounds;
     private float cameraY;
     private float boundHeight;
+
+    public GameObject[] enemies;
+    public GameObject[] spawnPositioins;
     void Start()
     {
         sideBounds = GameObject.FindGameObjectsWithTag("SideBound");
@@ -22,6 +25,7 @@ public class BgMover : MonoBehaviour
 
         Move();
         Reposition();
+        
     }
 
     private void Move()
@@ -47,8 +51,44 @@ public class BgMover : MonoBehaviour
             Vector3 temp = transform.position;
             temp.y = highestBoundsY + boundHeight-1f;
             transform.position = temp;
+            //Spawn Enemies
+            SpawnEnemies();
         }
 
         
+    }
+
+    void SpawnEnemies()
+    {
+        //Frequencies of spawning enemies
+        if(Random.Range(0,10)>0)
+        {
+            int randomEnemyIndex = Random.Range(0, enemies.Length);
+            if(randomEnemyIndex == 0)
+            {
+                //Flag enemy---Needs to be spawned in middle
+                Instantiate(enemies[randomEnemyIndex], new Vector3(0, transform.position.y,3), Quaternion.identity);
+            }
+            else
+            {
+                GameObject enemyObj = Instantiate(enemies[randomEnemyIndex]);
+                Vector3 enemyScale = enemyObj.transform.localScale;
+
+                if(Random.Range(0,2)>0)
+                {
+                    enemyObj.transform.position = spawnPositioins[0].transform.position;
+
+                    enemyScale.x = -Mathf.Abs(enemyScale.x);
+                }
+                else
+                {
+                    enemyObj.transform.position = spawnPositioins[1].transform.position;
+
+                    enemyScale.x = Mathf.Abs(enemyScale.x);
+                }
+                enemyObj.transform.localScale = enemyScale;
+            }
+            
+        }
     }
 }
