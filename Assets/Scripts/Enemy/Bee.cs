@@ -9,6 +9,7 @@ public class Bee : MonoBehaviour
 
     private bool atackStarted;
     private bool attackRight;
+    bool moveAndAttack;
     private void Start()
     {
         if(transform.position.x > 0)
@@ -40,7 +41,31 @@ public class Bee : MonoBehaviour
             if(!atackStarted)
             {
                 atackStarted = true;
+                StartCoroutine(AttackPlayer());
             }
         }
+        if (moveAndAttack)
+        {
+            if(!attackRight)
+            {
+                transform.position -= Vector3.right * moveSpeed * Time.deltaTime; 
+            }else
+            {
+                transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+            }
+        }
+    }
+
+    IEnumerator AttackPlayer()
+    {
+        yield return new WaitForSeconds(1.5f);
+        transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, -45));
+        moveAndAttack = true;
+        Invoke(nameof(Deactivate),5);
+    }
+
+    void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }
